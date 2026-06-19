@@ -1,23 +1,94 @@
+'use client';
+
+import { Zap, Code } from 'lucide-react';
+import AppLayout from '@/components/layout/AppLayout';
+import WelcomeCard from '@/components/dashboard/WelcomeCard';
+import StatsCards from '@/components/dashboard/StatsCards';
+import QuickActionGrid from '@/components/dashboard/QuickActionGrid';
+import ActivityFeed from '@/components/dashboard/ActivityFeed';
+import ArenaDashboard from '@/components/arena/ArenaDashboard';
+import DeFiHub from '@/components/defi/DeFiHub';
+import ProfileCard from '@/components/identity/ProfileCard';
+import LeaderboardTable from '@/components/leaderboard/LeaderboardTable';
+import NFTGrid from '@/components/marketplace/NFTGrid';
+import MetricsCards from '@/components/analytics/MetricsCards';
+
 export default function Page() {
   return (
-    <main className="relative flex min-h-screen items-center justify-center bg-[color:light-dark(#fff,#000)] text-[color:light-dark(#000,#fff)]">
-      <svg
-        aria-hidden="true"
-        className="size-20"
-        fill="none"
-        viewBox="0 0 20 20"
-        xmlns="http://www.w3.org/2000/svg"
-        stroke="currentColor"
-        strokeWidth="0.5"
-      >
-        <path
-          d="M14.2 14.2H17V6.9375C17 4.76288 15.2371 3 13.0625 3H5.8V5.8M14.2 14.2V7.79063L7.79062 14.2H14.2ZM14.2 14.2V17H6.9375C4.76288 17 3 15.2371 3 13.0625V5.8H5.8M5.8 5.8V12.2313L12.2313 5.8H5.8Z"
-          strokeLinejoin="round"
-        />
-      </svg>
-      <p className="absolute left-1/2 top-[calc(50%+56px)] -translate-x-1/2 whitespace-nowrap text-sm font-medium text-muted-foreground">
-        Your v0 generation will show here.
-      </p>
-    </main>
-  )
+    <AppLayout>
+      <div className="p-4 md:p-6 lg:p-8 space-y-6 animate-in fade-in">
+        {/* Welcome Section */}
+        <section id="dashboard">
+          <WelcomeCard />
+        </section>
+
+        {/* Stats Cards */}
+        <section>
+          <StatsCards />
+        </section>
+
+        {/* Quick Actions */}
+        <section>
+          <h2 className="text-2xl font-bold mb-4 text-foreground">Quick Actions</h2>
+          <QuickActionGrid />
+        </section>
+
+        {/* Activity Feed */}
+        <section>
+          <ActivityFeed />
+        </section>
+
+        {/* Additional Sections */}
+        <div className="space-y-6 pb-8">
+          {/* Arena Section */}
+          <section id="arena">
+            <ArenaDashboard />
+          </section>
+
+          {/* DeFi Hub */}
+          <section id="defi">
+            <DeFiHub />
+          </section>
+
+          {/* Identity */}
+          <section id="identity">
+            <ProfileCard />
+          </section>
+
+          {/* Leaderboard */}
+          <section id="leaderboard">
+            <LeaderboardTable />
+          </section>
+
+          {/* Marketplace */}
+          <section id="marketplace">
+            <NFTGrid />
+          </section>
+
+          {/* Analytics */}
+          <section id="analytics">
+            <MetricsCards />
+          </section>
+
+          {/* AI Assistant */}
+          <section id="ai" className="glass p-6 rounded-xl">
+            <h3 className="text-lg font-bold text-neon-green mb-4 flex items-center gap-2">
+              <Zap className="w-5 h-5" />
+              AI Assistant
+            </h3>
+            <p className="text-muted-foreground mb-4">AI-powered trading companion coming soon...</p>
+          </section>
+
+          {/* Dev Portal */}
+          <section id="dev" className="glass p-6 rounded-xl">
+            <h3 className="text-lg font-bold text-neon-purple mb-4 flex items-center gap-2">
+              <Code className="w-5 h-5" />
+              Dev Portal
+            </h3>
+            <p className="text-muted-foreground mb-4">API documentation & webhooks coming soon...</p>
+          </section>
+        </div>
+      </div>
+    </AppLayout>
+  );
 }

@@ -10,15 +10,11 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
+  title: 'Agunnaya Labs - App OS',
+  description: 'Web3 Gaming & DeFi Dashboard powered by Base Mainnet',
   generator: 'v0.app',
   icons: {
     icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
       {
         url: '/icon-dark-32x32.png',
         media: '(prefers-color-scheme: dark)',
@@ -46,8 +42,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body className="font-sans antialiased">
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} dark`}>
+      <body className="font-sans antialiased bg-background text-foreground overflow-hidden">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
