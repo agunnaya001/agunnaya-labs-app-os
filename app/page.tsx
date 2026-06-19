@@ -1,19 +1,30 @@
-'use client';
+import { redirect } from 'next/navigation'
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
+import { Zap, Code } from 'lucide-react'
+import AppLayout from '@/components/layout/AppLayout'
+import WelcomeCard from '@/components/dashboard/WelcomeCard'
+import StatsCards from '@/components/dashboard/StatsCards'
+import QuickActionGrid from '@/components/dashboard/QuickActionGrid'
+import ActivityFeed from '@/components/dashboard/ActivityFeed'
+import ArenaDashboard from '@/components/arena/ArenaDashboard'
+import DeFiHub from '@/components/defi/DeFiHub'
+import ProfileCard from '@/components/identity/ProfileCard'
+import LeaderboardTable from '@/components/leaderboard/LeaderboardTable'
+import NFTGrid from '@/components/marketplace/NFTGrid'
+import MetricsCards from '@/components/analytics/MetricsCards'
 
-import { Zap, Code } from 'lucide-react';
-import AppLayout from '@/components/layout/AppLayout';
-import WelcomeCard from '@/components/dashboard/WelcomeCard';
-import StatsCards from '@/components/dashboard/StatsCards';
-import QuickActionGrid from '@/components/dashboard/QuickActionGrid';
-import ActivityFeed from '@/components/dashboard/ActivityFeed';
-import ArenaDashboard from '@/components/arena/ArenaDashboard';
-import DeFiHub from '@/components/defi/DeFiHub';
-import ProfileCard from '@/components/identity/ProfileCard';
-import LeaderboardTable from '@/components/leaderboard/LeaderboardTable';
-import NFTGrid from '@/components/marketplace/NFTGrid';
-import MetricsCards from '@/components/analytics/MetricsCards';
+async function Page() {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session?.user) {
+    redirect('/sign-in')
+  }
 
-export default function Page() {
+  return <DashboardPage />
+}
+
+function DashboardPage() {
+
   return (
     <AppLayout>
       <div className="p-4 md:p-6 lg:p-8 space-y-6 animate-in fade-in">
@@ -90,5 +101,7 @@ export default function Page() {
         </div>
       </div>
     </AppLayout>
-  );
+  )
 }
+
+export default Page
