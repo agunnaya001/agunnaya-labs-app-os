@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Wallet, Copy, LogOut } from 'lucide-react';
 import { useAccount, useDisconnect } from 'wagmi';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,11 @@ export default function WelcomeCard() {
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const { balance: aglBalance, isLoading } = useAGLBalance();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const shortAddress = address ? `${address.slice(0, 6)}...${address.slice(-4)}` : '0x...';
 
@@ -18,6 +23,24 @@ export default function WelcomeCard() {
       navigator.clipboard.writeText(address);
     }
   };
+
+  // Render loading state during hydration
+  if (!mounted) {
+    return (
+      <div className="glass glow-green-hover p-6 rounded-xl">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex-1">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">
+              Welcome to <span className="text-neon-green">Agunnaya Labs</span>
+            </h1>
+            <p className="text-muted-foreground text-sm md:text-base">
+              Loading your profile...
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!isConnected) {
     return (

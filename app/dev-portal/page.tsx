@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/components/layout/AppLayout';
@@ -11,6 +11,26 @@ import { Code2, Wallet, AlertCircle } from 'lucide-react';
 export default function DevPortalPage() {
   const { isConnected, address } = useAccount();
   const [selectedTemplate, setSelectedTemplate] = useState<string>('erc20');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <AppLayout>
+        <div className="flex-1 flex items-center justify-center p-6">
+          <div className="glass p-12 rounded-xl text-center max-w-md animate-pulse">
+            <div className="h-16 w-16 bg-black/40 rounded-full mx-auto mb-6" />
+            <div className="h-8 bg-black/40 rounded w-3/4 mx-auto mb-4" />
+            <div className="h-4 bg-black/40 rounded w-full mb-2" />
+            <div className="h-4 bg-black/40 rounded w-5/6 mx-auto" />
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
 
   if (!isConnected) {
     return (
