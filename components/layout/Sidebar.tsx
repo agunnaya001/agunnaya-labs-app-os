@@ -15,6 +15,7 @@ import {
   X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ConnectWallet } from '@/components/web3/ConnectWallet';
 
 interface SidebarProps {
   mobile?: boolean;
@@ -74,13 +75,7 @@ export default function Sidebar({ mobile = false, onClose }: SidebarProps) {
 
       {/* Wallet Button */}
       <div className="p-4 border-t border-sidebar-border">
-        <Button
-          className="w-full bg-gradient-to-r from-neon-green to-neon-purple text-black font-bold hover:shadow-[0_0_30px_rgba(0,255,157,0.6)] transition-all duration-200"
-          size="lg"
-        >
-          <Wallet className="w-4 h-4 mr-2" />
-          Connect Wallet
-        </Button>
+        <ConnectWallet />
       </div>
 
       {/* Footer Stats */}

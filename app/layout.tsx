@@ -2,6 +2,7 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
+import { Web3Provider } from '@/components/providers/Web3Provider'
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
 const geistMono = Geist_Mono({
@@ -44,7 +45,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} dark`}>
       <body className="font-sans antialiased bg-background text-foreground overflow-hidden">
-        {children}
+        <Web3Provider>
+          {children}
+        </Web3Provider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
