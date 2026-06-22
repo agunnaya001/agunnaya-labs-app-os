@@ -23,15 +23,15 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { icon: Home, label: 'Dashboard', href: '#dashboard', color: 'text-neon-green' },
-  { icon: Zap, label: 'Arena', href: '#arena', color: 'text-neon-green' },
-  { icon: TrendingUp, label: 'DeFi Hub', href: '#defi', color: 'text-neon-purple' },
-  { icon: Users, label: 'Identity', href: '#identity', color: 'text-neon-green' },
-  { icon: BarChart3, label: 'Leaderboard', href: '#leaderboard', color: 'text-neon-purple' },
-  { icon: ShoppingBag, label: 'Marketplace', href: '#marketplace', color: 'text-neon-green' },
-  { icon: BarChart3, label: 'Analytics', href: '#analytics', color: 'text-neon-purple' },
-  { icon: Wand2, label: 'AI Assistant', href: '#ai', color: 'text-neon-green' },
-  { icon: Code2, label: 'Dev Portal', href: '#dev', color: 'text-neon-purple' },
+  { icon: Home, label: 'Dashboard', href: '/', color: 'text-neon-green' },
+  { icon: Zap, label: 'Arena', href: '/#arena', color: 'text-neon-green' },
+  { icon: TrendingUp, label: 'DeFi Hub', href: '/#defi', color: 'text-neon-purple' },
+  { icon: Users, label: 'Identity', href: '/#identity', color: 'text-neon-green' },
+  { icon: BarChart3, label: 'Leaderboard', href: '/#leaderboard', color: 'text-neon-purple' },
+  { icon: ShoppingBag, label: 'Marketplace', href: '/#marketplace', color: 'text-neon-green' },
+  { icon: BarChart3, label: 'Analytics', href: '/#analytics', color: 'text-neon-purple' },
+  { icon: Wand2, label: 'AI Assistant', href: '/#ai', color: 'text-neon-green' },
+  { icon: Code2, label: 'Dev Portal', href: '/dev-portal', color: 'text-neon-purple' },
 ];
 
 export default function Sidebar({ mobile = false, onClose }: SidebarProps) {
