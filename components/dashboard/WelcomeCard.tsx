@@ -2,36 +2,69 @@
 
 import React from 'react';
 import { Wallet, Copy, LogOut } from 'lucide-react';
+import { useAccount, useDisconnect } from 'wagmi';
 import { Button } from '@/components/ui/button';
+import { useAGLBalance } from '@/lib/hooks/useWeb3Data';
 
 export default function WelcomeCard() {
-  const mockAddress = '0x742d...8E9F';
-  const mockBalance = '2,450.50';
+  const { address, isConnected } = useAccount();
+  const { disconnect } = useDisconnect();
+  const { balance: aglBalance, isLoading } = useAGLBalance();
+
+  const shortAddress = address ? `${address.slice(0, 6)}...${address.slice(-4)}` : '0x...';
+
+  const handleCopyAddress = () => {
+    if (address) {
+      navigator.clipboard.writeText(address);
+    }
+  };
+
+  if (!isConnected) {
+    return (
+      <div className="glass glow-green-hover p-6 rounded-xl">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex-1">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">
+              Welcome to <span className="text-neon-green">Agunnaya Labs</span>
+            </h1>
+            <p className="text-muted-foreground text-sm md:text-base">
+              Connect your wallet to get started on Base Mainnet. Ready to compete and earn?
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="glass glow-green-hover p-6 rounded-xl">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex-1">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">
-            Welcome back, <span className="text-neon-green">Player</span>
+            Welcome back, <span className="text-neon-green">Champion</span>
           </h1>
           <p className="text-muted-foreground text-sm md:text-base mb-4">
             Your Web3 gaming hub on Base Mainnet. Ready to compete and earn?
           </p>
 
           {/* Wallet Status */}
-          <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center gap-4 mb-4 flex-wrap">
             <div className="flex items-center gap-2 bg-black/40 px-4 py-2 rounded-lg">
               <Wallet className="w-4 h-4 text-neon-green" />
               <span className="text-xs text-muted-foreground">Connected:</span>
-              <code className="text-xs font-mono text-foreground">{mockAddress}</code>
-              <button className="ml-2 hover:text-neon-green transition-colors">
+              <code className="text-xs font-mono text-foreground">{shortAddress}</code>
+              <button 
+                onClick={handleCopyAddress}
+                className="ml-2 hover:text-neon-green transition-colors"
+              >
                 <Copy className="w-3 h-3" />
               </button>
             </div>
             <div className="bg-black/40 px-4 py-2 rounded-lg">
               <div className="text-xs text-muted-foreground mb-1">AGL Balance</div>
-              <div className="text-lg font-bold text-neon-green">{mockBalance} AGL</div>
+              <div className="text-lg font-bold text-neon-green">
+                {isLoading ? 'Loading...' : `${parseFloat(aglBalance).toFixed(2)} AGL`}
+              </div>
             </div>
           </div>
         </div>
@@ -42,6 +75,7 @@ export default function WelcomeCard() {
             Play Arena
           </Button>
           <Button
+            onClick={() => disconnect()}
             variant="outline"
             className="flex-1 md:flex-none border-neon-purple text-neon-purple hover:bg-neon-purple/10"
           >
