@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { TrendingUp, Award, Zap, Gift } from 'lucide-react';
 import { useArenaChampionBalance, useAGLBalance, useMarketplaceListingsCount, useIsConnected } from '@/lib/hooks/useWeb3Data';
 
@@ -31,7 +31,12 @@ function StatCard({ icon, label, value, subtext, color }: StatCardProps) {
 }
 
 export default function StatsCards() {
+  const [mounted, setMounted] = useState(false);
   const { isConnected } = useIsConnected();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const { balance: championCount, isLoading: loadingChampions } = useArenaChampionBalance();
   const { balance: aglBalance, isLoading: loadingAGL } = useAGLBalance();
   const { count: marketplaceCount, isLoading: loadingMarketplace } = useMarketplaceListingsCount();
@@ -66,6 +71,16 @@ export default function StatsCards() {
       color: 'purple' as const,
     },
   ];
+
+  if (!mounted) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {[0, 1, 2, 3].map((idx) => (
+          <div key={idx} className="glass p-6 rounded-xl bg-black/40 animate-pulse h-24" />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
