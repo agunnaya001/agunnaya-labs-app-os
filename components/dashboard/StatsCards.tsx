@@ -1,92 +1,115 @@
-'use client';
+'use client'
 
-import React, { useEffect, useState } from 'react';
-import { TrendingUp, Award, Zap, Gift } from 'lucide-react';
-import { useArenaChampionBalance, useAGLBalance, useMarketplaceListingsCount, useIsConnected } from '@/lib/hooks/useWeb3Data';
+import { useEffect, useState } from 'react'
+import { TrendingUp, Award, Zap, Gift } from 'lucide-react'
 
 interface StatCardProps {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-  subtext?: string;
-  color: 'green' | 'purple';
+  icon: React.ReactNode
+  label: string
+  value: string
+  subtext?: string
+  color: 'green' | 'purple'
 }
 
 function StatCard({ icon, label, value, subtext, color }: StatCardProps) {
-  const colorClass = color === 'green' ? 'text-neon-green' : 'text-neon-purple';
-  const glowClass = color === 'green' ? 'glow-green-hover' : 'glow-purple-hover';
+  const colorClass = color === 'green' ? 'text-neon-green' : 'text-neon-purple'
+  const glowClass = color === 'green' ? 'glow-green-hover' : 'glow-purple-hover'
 
   return (
     <div className={`glass ${glowClass} p-6 rounded-xl flex flex-col gap-3`}>
-      <div className="flex items-center justify-between">
-        <span className="text-sm text-muted-foreground font-medium">{label}</span>
-        <div className={`${colorClass}`}>{icon}</div>
-      </div>
-      <div className="flex flex-col gap-1">
-        <div className="text-2xl font-bold text-foreground">{value}</div>
-        {subtext && <div className="text-xs text-muted-foreground">{subtext}</div>}
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-black/20 rounded-md">{icon}</div>
+          <div>
+            <div className="text-xs text-muted-foreground">{label}</div>
+            <div className="text-xl font-bold text-foreground">{value}</div>
+            {subtext && <div className="text-xs text-muted-foreground">{subtext}</div>}
+          </div>
+        </div>
       </div>
     </div>
-  );
+  )
 }
 
 export default function StatsCards() {
-  const [mounted, setMounted] = useState(false);
-  const { isConnected } = useIsConnected();
+  const [stats, setStats] = useState<any>(null)
+  const [nftCount, setNftCount] = useState(0)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-  const { balance: championCount, isLoading: loadingChampions } = useArenaChampionBalance();
-  const { balance: aglBalance, isLoading: loadingAGL } = useAGLBalance();
-  const { count: marketplaceCount, isLoading: loadingMarketplace } = useMarketplaceListingsCount();
+    const loadStats = async () => {
+      try {
+        const [userRes, nftsRes] = await Promise.all([
+          fetch('/api/user/stats'),
+          fetch('/api/nfts/recent'),
+        ])
 
-  const stats = [
+        if (userRes.ok) {
+          const userStats = await userRes.json()
+          setStats(userStats)
+        }
+
+        if (nftsRes.ok) {
+          const nfts = await nftsRes.json()
+          setNftCount(Array.isArray(nfts) ? nfts.length : 0)
+        }
+      } catch (error) {
+        console.error('[v0] Failed to load stats:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadStats()
+  }, [])
+
+  if (loading || !stats) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="glass p-6 rounded-xl h-24 animate-pulse bg-background/50" />
+        <div className="glass p-6 rounded-xl h-24 animate-pulse bg-background/50" />
+        <div className="glass p-6 rounded-xl h-24 animate-pulse bg-background/50" />
+        <div className="glass p-6 rounded-xl h-24 animate-pulse bg-background/50" />
+      </div>
+    )
+  }
+
+  const displayStats = [
     {
       icon: <Zap className="w-5 h-5" />,
       label: 'NFT Champions',
-      value: loadingChampions ? '...' : championCount.toString(),
-      subtext: isConnected ? 'On-chain' : 'Connect wallet',
+      value: nftCount.toString(),
+      subtext: 'In your collection',
       color: 'green' as const,
     },
     {
       icon: <Award className="w-5 h-5" />,
       label: 'Win Rate',
-      value: isConnected ? '—' : '0%',
-      subtext: 'Coming soon',
+      value: stats.winRate ? `${parseFloat(stats.winRate).toFixed(1)}%` : '0%',
+      subtext: 'Overall',
       color: 'green' as const,
     },
     {
       icon: <TrendingUp className="w-5 h-5" />,
-      label: 'AGL Balance',
-      value: loadingAGL ? '...' : `${parseFloat(aglBalance).toFixed(2)}`,
-      subtext: 'On-chain',
+      label: 'Total Score',
+      value: stats.score?.toString() || '0',
+      subtext: 'All time points',
       color: 'purple' as const,
     },
     {
       icon: <Gift className="w-5 h-5" />,
-      label: 'Marketplace Listings',
-      value: loadingMarketplace ? '...' : marketplaceCount.toString(),
-      subtext: 'Active now',
+      label: 'Wins',
+      value: stats.wins?.toString() || '0',
+      subtext: 'Matches won',
       color: 'purple' as const,
     },
-  ];
-
-  if (!mounted) {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {[0, 1, 2, 3].map((idx) => (
-          <div key={idx} className="glass p-6 rounded-xl bg-black/40 animate-pulse h-24" />
-        ))}
-      </div>
-    );
-  }
+  ]
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-      {stats.map((stat, idx) => (
+      {displayStats.map((stat, idx) => (
         <StatCard key={idx} {...stat} />
       ))}
     </div>
-  );
+  )
 }
